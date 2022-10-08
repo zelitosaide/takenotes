@@ -2,8 +2,8 @@ export function VideoTableHead() {
   return (
     <thead>
       <tr>
-        <th>Title</th>
-        <th>URL</th>
+        <th style={{ border: "1px solid black" }}>Title</th>
+        <th style={{ border: "1px solid black" }}>URL</th>
       </tr>
     </thead>
   );
