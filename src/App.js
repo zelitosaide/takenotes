@@ -1,11 +1,12 @@
-// import { VideoList } from "./features/videos/VideoList";
-
-import { VideoTable } from "./features/videos/VideoTable";
+import { VideoPlayLists } from "./features/videoPlayLists/VideoPlayLists";
+import { VideoPlayListTable } from "./features/videoPlayLists/VideoPlayListTable";
 
 function App() {
   return (
-    // <VideoList />
-    <VideoTable />
+    <>
+      <VideoPlayLists />
+      <VideoPlayListTable />
+    </>
   );
 }
 

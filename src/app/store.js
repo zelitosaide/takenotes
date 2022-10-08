@@ -1,9 +1,9 @@
 import { configureStore } from "@reduxjs/toolkit";
 
-import videoReducer from "../features/videos/videosSlice";
+import videoPlayListsReducer from "../features/videoPlayLists/videoPlayListsSlice";
 
 export const store = configureStore({
   reducer: {
-    videos: videoReducer
+    videoPlayLists: videoPlayListsReducer
   }
 });
