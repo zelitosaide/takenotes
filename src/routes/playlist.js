@@ -21,8 +21,9 @@ export function PlayList() {
       .then(function (response) {
         return response.json();
       })
-      .then(function ({ items }) {
-        setPlaylistItems(items);
+      .then(function (data) {
+        console.log(data);
+        setPlaylistItems(data.items);
       });
   }, [playlist.playlistId]);
 
