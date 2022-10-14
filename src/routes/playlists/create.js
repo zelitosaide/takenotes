@@ -1,6 +1,6 @@
-import { Form, redirect } from "react-router-dom";
+import { Form, redirect, useNavigate } from "react-router-dom";
 
-import { API } from "../api/client";
+import { API } from "../../api/client";
 
 export async function action({ request }) {
   const formData = await request.formData();
@@ -10,8 +10,10 @@ export async function action({ request }) {
 }
 
 export function CreatePlaylist() {
+  const navigate = useNavigate();
+
   return (
-    <Form method="post" id="contact-form"> {/* id="playlist-form" */}
+    <Form method="post" id="contact-form">
       <p>
         <span>Playlist Title</span>
         <input
@@ -32,7 +34,14 @@ export function CreatePlaylist() {
       </p>
       <p>
         <button type="submit">Save</button>
-        <button type="button">Cancel</button>
+        <button
+          type="button"
+          onClick={function () {
+            navigate(-1);
+          }}
+        >
+          Cancel
+        </button>
       </p>
     </Form>
   );

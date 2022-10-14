@@ -1,10 +1,6 @@
-import { useEffect, useState } from "react";
-import { Form, useLoaderData } from "react-router-dom";
+import { Form, Outlet, useLoaderData } from "react-router-dom";
 
-import { API } from "../api/client";
-
-const BASE_URL = process.env.REACT_APP_YOUTUBE_BASE_URL;
-const API_KEY = process.env.REACT_APP_YOUTUBE_API_KEY;
+import { API } from "../../api/client";
 
 export async function loader({ params }) {
   const { playlistId } = params;
@@ -14,18 +10,6 @@ export async function loader({ params }) {
 
 export function PlayList() {
   const { data: playlist } = useLoaderData();
-  const [playlistItems, setPlaylistItems] = useState([]);
-
-  useEffect(function () {
-    fetch(`${BASE_URL}?part=snippet&key=${API_KEY}&playlistId=${playlist.playlistId}&maxResults=50`)
-      .then(function (response) {
-        return response.json();
-      })
-      .then(function (data) {
-        console.log(data);
-        setPlaylistItems(data.items);
-      });
-  }, [playlist.playlistId]);
 
   return (
     <div id="contact"> {/* id="playlist" */}
@@ -34,20 +18,7 @@ export function PlayList() {
           <i>{playlist.title}</i>
           <Favorite playlist={playlist} />
         </h1>
-        {playlistItems.length ? (
-          <ul>
-            {playlistItems.map(function (playlistItem) {
-              const { snippet } = playlistItem;
-              return (
-                <li key={playlistItem.id}>{snippet.title}</li>
-              );
-            })}
-          </ul>
-        ) : (
-          <p>
-            <i>No playlist items</i>
-          </p>
-        )}
+
         <div>
           <Form action="edit">
             <button type="submit">Edit</button>
@@ -66,6 +37,8 @@ export function PlayList() {
             <button>Delete</button>
           </Form>
         </div>
+
+        <Outlet />
       </div>
     </div>
   );
@@ -73,7 +46,6 @@ export function PlayList() {
 
 function Favorite({ playlist }) {
   let favorite = playlist?.favorite;
-
   return (
     <Form method="post">
       <button

@@ -5,7 +5,7 @@ import {
   useNavigate
 } from "react-router-dom";
 
-import { API } from "../api/client";
+import { API } from "../../api/client";
 
 export async function loader({ params }) {
   const { playlistId } = params;
@@ -26,7 +26,7 @@ export function EditPlaylist() {
   const navigate = useNavigate();
 
   return (
-    <Form method="post" id="contact-form"> {/* id="playlist-form" */}
+    <Form method="post" id="contact-form">
       <p>
         <span>Playlist Title</span>
         <input

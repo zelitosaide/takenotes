@@ -6,7 +6,7 @@ import {
   useNavigation
 } from "react-router-dom";
 
-import { API } from "../api/client";
+import { API } from "../../api/client";
 
 export async function loader() {
   const { data } = await API.get("/videoPlayLists");
@@ -60,7 +60,7 @@ export function Root() {
                 return (
                   <li key={playlist._id}>
                     <NavLink
-                      to={`playlists/${playlist._id}`}
+                      to={`playlists/${playlist.playlistId}`}
                       className={function ({ isActive, isPending }) {
                         return isActive
                           ? "active"

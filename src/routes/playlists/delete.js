@@ -1,6 +1,6 @@
 import { redirect } from "react-router-dom";
 
-import { API } from "../api/client";
+import { API } from "../../api/client";
 
 export async function action({ params }) {
   const { playlistId } = params;
