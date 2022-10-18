@@ -12,7 +12,7 @@ export function PlayList() {
   const { data: playlist } = useLoaderData();
 
   return (
-    <div id="contact"> {/* id="playlist" */}
+    <div id="contact">
       <div>
         <h1>
           <i>{playlist.title}</i>
