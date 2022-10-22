@@ -73,3 +73,15 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/t
 
 * [www.developers.google.com](https://developers.google.com/youtube/v3/docs)
 * [https://console.cloud.google.com/](https://console.cloud.google.com/apis/api/youtube.googleapis.com)
+
+
+## lazy load references
+
+* [lazy load - 2](https://codesandbox.io/s/sckvn)
+* [lazy load - 1](https://codesandbox.io/examples/package/react-window-infinite-loader)
+
+## What's next?
+
+* New/Add button?
+* Mutation Discussion
+  

@@ -5,7 +5,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import './index.css';
 
 import {
-  Root,
+  Root as RootList,
   loader as rootLoader
 } from './routes/playlists/root';
 
@@ -30,10 +30,17 @@ import {
 import { action as deletePlaylistAction } from './routes/playlists/delete';
 import { Index, loader as indexLoader } from './routes/playlists';
 
-const router = createBrowserRouter([
+// Users
+import { Root as UserRoot, loader as rootUserLoader } from "./routes/users/root";
+import { ErrorPage as UserErrorPage } from "./routes/users/error-page";
+import { User, loader as userLoader } from './routes/users/user';
+import { CreateUser, action as createUserAction } from './routes/users/create';
+import { EditUser, loader as editUserLoader, action as editUserAction } from './routes/users/edit';
+
+const playlistRouter = createBrowserRouter([
   {
     path: "/",
-    element: <Root />,
+    element: <RootList />,
     errorElement: <ErrorPage />,
     loader: rootLoader,
     children: [
@@ -69,7 +76,34 @@ const router = createBrowserRouter([
 
 ]);
 
+const userRouter = createBrowserRouter([
+  {
+    path: "/",
+    element: <UserRoot />,
+    errorElement: <UserErrorPage />,
+    loader: rootUserLoader,
+    children: [
+      {
+        path: "users/:userId",
+        loader: userLoader,
+        element: <User />
+      },
+      {
+        path: "users/create",
+        action: createUserAction,
+        element: <CreateUser />
+      },
+      {
+        path: "users/:userId/edit",
+        action: editUserAction,
+        loader: editUserLoader,
+        element: <EditUser />,
+      }
+    ]
+  },
+]);
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <RouterProvider router={router} />
+  <RouterProvider router={userRouter} />
 );
