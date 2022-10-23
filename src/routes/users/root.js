@@ -1,4 +1,10 @@
-import { Form, Link, Outlet, useLoaderData } from "react-router-dom";
+import {
+  Form,
+  NavLink,
+  Outlet,
+  useLoaderData,
+  useNavigation
+} from "react-router-dom";
 
 export async function loader() {
   const response = await fetch("http://localhost:5000/invoices?limit=60");
@@ -7,6 +13,7 @@ export async function loader() {
 
 export function Root() {
   const { items } = useLoaderData();
+  const navigation = useNavigation();
 
   return (
     <>
@@ -41,10 +48,19 @@ export function Root() {
               {items.map(function (item) {
                 return (
                   <li key={item.number}>
-                    <Link to={`users/${item._id}`}>
+                    <NavLink
+                      to={`users/${item._id}`}
+                      className={function ({ isActive, isPending }) {
+                        return isActive
+                          ? "active"
+                          : isPending
+                            ? "pending"
+                            : ""
+                      }}
+                    >
                       {item.name}{" "}
                       {item.favorite && <span>★</span>}
-                    </Link>
+                    </NavLink>
                   </li>
                 );
               })}
@@ -56,7 +72,10 @@ export function Root() {
           )}
         </nav>
       </div>
-      <div id="detail">
+      <div
+        id="detail"
+        className={navigation.state === "loading" ? "loading" : ""}
+      >
         <Outlet />
       </div>
     </>

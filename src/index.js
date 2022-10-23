@@ -36,6 +36,7 @@ import { ErrorPage as UserErrorPage } from "./routes/users/error-page";
 import { User, loader as userLoader } from './routes/users/user';
 import { CreateUser, action as createUserAction } from './routes/users/create';
 import { EditUser, loader as editUserLoader, action as editUserAction } from './routes/users/edit';
+import { action as deleteUser } from "./routes/users/delete";
 
 const playlistRouter = createBrowserRouter([
   {
@@ -98,6 +99,11 @@ const userRouter = createBrowserRouter([
         action: editUserAction,
         loader: editUserLoader,
         element: <EditUser />,
+      },
+      {
+        path: "users/:userId/delete",
+        action: deleteUser,
+        errorElement: <div>Opps! There was an error.</div>
       }
     ]
   },
