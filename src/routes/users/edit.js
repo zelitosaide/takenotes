@@ -1,4 +1,4 @@
-import { Form, redirect, useLoaderData } from "react-router-dom";
+import { Form, redirect, useLoaderData, useNavigate } from "react-router-dom";
 
 export async function action({ request, params }) {
   const { userId } = params;
@@ -27,6 +27,7 @@ export async function loader({ params }) {
 
 export function EditUser() {
   const user = useLoaderData();
+  const navigate = useNavigate();
 
   return (
     <Form method="post" id="contact-form">
@@ -59,7 +60,14 @@ export function EditUser() {
       </label>
       <p>
         <button type="submit">Save</button>
-        <button type="button">Cancel</button>
+        <button
+          type="button"
+          onClick={function () {
+            navigate(-1);
+          }}
+        >
+          Cancel
+        </button>
       </p>
     </Form>
   );

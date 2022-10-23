@@ -37,6 +37,7 @@ import { User, loader as userLoader } from './routes/users/user';
 import { CreateUser, action as createUserAction } from './routes/users/create';
 import { EditUser, loader as editUserLoader, action as editUserAction } from './routes/users/edit';
 import { action as deleteUser } from "./routes/users/delete";
+import { Index as UserIndex } from "./routes/users/index";
 
 const playlistRouter = createBrowserRouter([
   {
@@ -84,6 +85,10 @@ const userRouter = createBrowserRouter([
     errorElement: <UserErrorPage />,
     loader: rootUserLoader,
     children: [
+      {
+        index: true,
+        element: <UserIndex />
+      },
       {
         path: "users/:userId",
         loader: userLoader,
