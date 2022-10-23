@@ -1,9 +1,30 @@
-import { Form, useLoaderData } from "react-router-dom";
+import { Form, useLoaderData, useFetcher } from "react-router-dom";
+
+export async function action({ request, params }) {
+  const { userId } = params;
+  const formData = await request.formData();
+  return await fetch(`http://localhost:5000/invoices/${userId}`, {
+    method: "PATCH",
+    body: JSON.stringify({
+      favorite: formData.get("favorite") === "true",
+    }),
+    headers: {
+      "Content-type": "application/json; charset=UTF-8",
+    }
+  });
+}
 
 export async function loader({ params }) {
   const { userId } = params;
   const response = await fetch(`http://localhost:5000/invoices/${userId}`);
-  return await response.json();
+  const data = await response.json();
+  if (!data) {
+    throw new Response("", {
+      status: 404,
+      statusText: "Not Found",
+    });
+  }
+  return data;
 }
 
 export function User() {
@@ -69,10 +90,15 @@ export function User() {
 }
 
 function Favorite({ user }) {
+  const fetcher = useFetcher();
+
   let favorite = user.favorite;
+  if (fetcher.formData) {
+    favorite = fetcher.formData.get("favorite") === "true";
+  }
 
   return (
-    <Form method="post">
+    <fetcher.Form method="post">
       <button
         name="favorite"
         value={favorite ? "false" : "true"}
@@ -84,6 +110,6 @@ function Favorite({ user }) {
       >
         {favorite ? "★" : "☆"}
       </button>
-    </Form>
+    </fetcher.Form>
   );
 }

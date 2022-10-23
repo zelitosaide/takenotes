@@ -33,7 +33,7 @@ import { Index, loader as indexLoader } from './routes/playlists';
 // Users
 import { Root as UserRoot, loader as rootUserLoader } from "./routes/users/root";
 import { ErrorPage as UserErrorPage } from "./routes/users/error-page";
-import { User, loader as userLoader } from './routes/users/user';
+import { User, loader as userLoader, action as userAction } from './routes/users/user';
 import { CreateUser, action as createUserAction } from './routes/users/create';
 import { EditUser, loader as editUserLoader, action as editUserAction } from './routes/users/edit';
 import { action as deleteUser } from "./routes/users/delete";
@@ -86,29 +86,36 @@ const userRouter = createBrowserRouter([
     loader: rootUserLoader,
     children: [
       {
-        index: true,
-        element: <UserIndex />
-      },
-      {
-        path: "users/:userId",
-        loader: userLoader,
-        element: <User />
-      },
-      {
-        path: "users/create",
-        action: createUserAction,
-        element: <CreateUser />
-      },
-      {
-        path: "users/:userId/edit",
-        action: editUserAction,
-        loader: editUserLoader,
-        element: <EditUser />,
-      },
-      {
-        path: "users/:userId/delete",
-        action: deleteUser,
-        errorElement: <div>Opps! There was an error.</div>
+        errorElement: <UserErrorPage />,
+        children: [
+          {
+            index: true,
+            element: <UserIndex />
+          },
+          {
+            path: "users/:userId",
+            action: userAction,
+            loader: userLoader,
+            element: <User />,
+            errorElement: <div>Opps! There was an error.</div>
+          },
+          {
+            path: "users/create",
+            action: createUserAction,
+            element: <CreateUser />
+          },
+          {
+            path: "users/:userId/edit",
+            action: editUserAction,
+            loader: editUserLoader,
+            element: <EditUser />,
+          },
+          {
+            path: "users/:userId/delete",
+            action: deleteUser,
+            errorElement: <div>Opps! There was an error.</div>
+          }
+        ]
       }
     ]
   },

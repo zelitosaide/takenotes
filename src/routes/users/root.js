@@ -1,43 +1,73 @@
+import { useEffect } from "react";
 import {
   Form,
   NavLink,
   Outlet,
   useLoaderData,
-  useNavigation
+  useNavigation,
+  useSubmit
 } from "react-router-dom";
 
-export async function loader() {
-  const response = await fetch("http://localhost:5000/invoices?limit=60");
-  return await response.json();
+export async function loader({ request }) {
+  const url = new URL(request.url);
+  const search = url.searchParams.get("search");
+  let response;
+
+  if (search) {
+    response = await fetch(`http://localhost:5000/invoices?search=${search}`);
+  } else {
+    response = await fetch(`http://localhost:5000/invoices?limit=60`);
+  }
+
+  const data = await response.json();
+  return { ...data, search };
 }
 
 export function Root() {
-  const { items } = useLoaderData();
+  const { items, search } = useLoaderData();
   const navigation = useNavigation();
+  const submit = useSubmit();
+
+  const searching = navigation.location &&
+    new URLSearchParams(navigation.location.search).has("search");
+
+  useEffect(function () {
+    document.getElementById("search").value = search;
+  }, [search]);
 
   return (
     <>
       <div id="sidebar">
         <h1>React Router Contacts</h1>
         <div>
-          <form id="search-form" role="search">
+          <Form id="search-form" role="search">
             <input
-              id="q"
+              id="search"
+              className={searching ? "loading" : ""}
               aria-label="Search contacts"
               placeholder="Search"
               type="search"
-              name="q"
+              name="search"
+              defaultValue={search}
+              onChange={function (event) {
+                // We only want to replace search results, 
+                // not the page before we started searching
+                const isFirstSearch = search == null;
+                submit(event.currentTarget.form, {
+                  replace: !isFirstSearch
+                });
+              }}
             />
             <div
               id="search-spinner"
               aria-hidden
-              hidden={true}
+              hidden={!searching}
             />
             <div
               className="sr-only"
               aria-live="polite"
             ></div>
-          </form>
+          </Form>
           <Form action="users/create">
             <button type="submit">New</button>
           </Form>
