@@ -26,6 +26,20 @@ body {
   line-height: 1.5;
   color: #121212;
 }
+
+.navbar::after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+
+
+
+
+
+
+/* 
 textarea,
 input,
 button {
@@ -378,4 +392,4 @@ i {
   align-items: center;
   justify-content: center;
   width: 100%;
-}
+} */

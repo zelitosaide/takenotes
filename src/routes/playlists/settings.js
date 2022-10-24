@@ -1,26 +1,40 @@
-import { Form, redirect, useNavigate } from "react-router-dom";
+import {
+  Form,
+  redirect,
+  useLoaderData,
+  useNavigate,
+} from "react-router-dom";
 
-export async function action({ request }) {
+export async function loader({ params }) {
+  const playlistId = params.playlistId;
+  const response = await fetch(`https://takenotes-api.herokuapp.com/playlists/${playlistId}`);
+  return await response.json();
+}
+
+export async function action({ request, params }) {
+  const playlistId = params.playlistId;
   const formData = await request.formData();
-  const playlist = Object.fromEntries(formData);
-  const response = await fetch("https://takenotes-api.herokuapp.com/playlists", {
-    method: "POST",
-    body: JSON.stringify(playlist),
+  const updates = Object.fromEntries(formData);
+
+  await fetch(`https://takenotes-api.herokuapp.com/playlists/${playlistId}`, {
+    method: "PATCH",
+    body: JSON.stringify(updates),
     headers: {
-      "Content-type": "application/json; charset=UTF-8"
+      "Content-type": "application/json; charset=UTF-8",
     }
   });
-  const { playlistId } = await response.json();
+
   return redirect(`/${playlistId}`);
 }
 
-export function CreatePlaylist() {
+export function PlaylistSettings() {
+  const playlist = useLoaderData();
   const navigate = useNavigate();
 
   return (
     <div style={{ padding: 10 }}>
-      <h4 style={{ margin: 0 }}>Create Playlist</h4>
-      <Form method="post" id="playlist-form">
+      <h4 style={{ margin: 0 }}>Playlist settings</h4>
+      <Form method="post" id="playlist-settings-form">
         <p>
           <label
             htmlFor="playlist-title"
@@ -34,6 +48,7 @@ export function CreatePlaylist() {
             aria-label="Playlist Title"
             type="text"
             name="title"
+            defaultValue={playlist.title}
           />
         </p>
         <p>
@@ -49,6 +64,7 @@ export function CreatePlaylist() {
             aria-label="Playlist ID"
             type="text"
             name="playlistId"
+            defaultValue={playlist.playlistId}
           />
         </p>
         <p>

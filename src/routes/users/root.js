@@ -42,12 +42,12 @@ export function Root() {
         <div>
           <Form id="search-form" role="search">
             <input
-              id="search"
-              className={searching ? "loading" : ""}
-              aria-label="Search contacts"
-              placeholder="Search"
-              type="search"
-              name="search"
+              id="search" //
+              className={searching ? "loading" : ""} //
+              aria-label="Search contacts" //
+              placeholder="Search" //
+              type="search" //
+              name="search" //
               defaultValue={search}
               onChange={function (event) {
                 // We only want to replace search results, 

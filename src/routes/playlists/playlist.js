@@ -1,64 +1,32 @@
-import { Form, Outlet, useLoaderData } from "react-router-dom";
-
-import { API } from "../../api/client";
+import { NavLink, Outlet, useLoaderData } from "react-router-dom";
 
 export async function loader({ params }) {
-  const { playlistId } = params;
-  const response = await API.get(`/videoPlayLists/${playlistId}`);
-  return { data: response.data };
+  return params.playlistId;
 }
 
 export function PlayList() {
-  const { data: playlist } = useLoaderData();
+  const playlistId = useLoaderData();
 
   return (
-    <div id="contact">
+    <>
+      <nav style={{ padding: 10, borderBottom: "1px solid #555" }}>
+        <ul className="navbar" style={{ listStyle: "none", margin: 0, padding: 0 }}>
+          {["Overview", "Settings"].map(function (item) {
+            const path = item === "Overview" ? `/${playlistId}` : `${item.toLowerCase()}`;
+            return (
+              <li key={item} style={{ float: "left", marginRight: 10 }}>
+                <NavLink to={path}>
+                  {item}
+                </NavLink>
+              </li>
+            );
+          })}
+        </ul>
+      </nav>
+
       <div>
-        <h1>
-          <i>{playlist.title}</i>
-          <Favorite playlist={playlist} />
-        </h1>
-
-        <div>
-          <Form action="edit">
-            <button type="submit">Edit</button>
-          </Form>
-          <Form
-            method="post"
-            action="delete"
-            onSubmit={function (event) {
-              if (!window.confirm(
-                "Please confirm you want to delete this record."
-              )) {
-                event.preventDefault();
-              }
-            }}
-          >
-            <button>Delete</button>
-          </Form>
-        </div>
-
         <Outlet />
       </div>
-    </div>
-  );
-}
-
-function Favorite({ playlist }) {
-  let favorite = playlist?.favorite;
-  return (
-    <Form method="post">
-      <button
-        name="favorite"
-        value={favorite ? "false" : "true"}
-        aria-label={favorite ? (
-          "Remove from favorites"
-        ) : (
-          "Add to favorites"
-        )}
-      >
-        {favorite ? "★" : "☆"}
-      </button>
-    </Form>
+    </>
   );
 }

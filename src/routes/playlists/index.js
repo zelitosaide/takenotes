@@ -1,66 +1,86 @@
-import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Form, useLoaderData } from "react-router-dom";
 
 const BASE_URL = process.env.REACT_APP_YOUTUBE_BASE_URL;
 const API_KEY = process.env.REACT_APP_YOUTUBE_API_KEY;
 
 export async function loader({ params, request }) {
-  const { playlistId } = params;
+  const playlistId = params.playlistId;
   const url = new URL(request.url);
-  const nextPageToken = url.searchParams.get("nextPageToken");
-  const prevPageToken = url.searchParams.get("prevPageToken");
+  const next = url.searchParams.get("next");
+  const prev = url.searchParams.get("prev");
 
   let response;
 
-  if (!nextPageToken && !prevPageToken) {
-    response = await axios.get(
-      `${BASE_URL}?part=snippet&key=${API_KEY}&playlistId=${playlistId}&maxResults=5`
+  if (!next && !prev) {
+    response = await fetch(
+      `${BASE_URL}?part=snippet&key=${API_KEY}&playlistId=${playlistId}&maxResults=20`
     );
   }
 
-  if (nextPageToken) {
-    response = await axios.get(
-      `${BASE_URL}?part=snippet&key=${API_KEY}&playlistId=${playlistId}&maxResults=5&pageToken=${nextPageToken}`
+  if (next) {
+    response = await fetch(
+      `${BASE_URL}?part=snippet&key=${API_KEY}&playlistId=${playlistId}&maxResults=20&pageToken=${next}`
     );
   }
 
-  if (prevPageToken) {
-    response = await axios.get(
-      `${BASE_URL}?part=snippet&key=${API_KEY}&playlistId=${playlistId}&maxResults=5&pageToken=${prevPageToken}`
+  if (prev) {
+    response = await fetch(
+      `${BASE_URL}?part=snippet&key=${API_KEY}&playlistId=${playlistId}&maxResults=20&pageToken=${prev}`
     );
   }
-
-  return response.data;
+  return await response.json();
 }
 
 export function Index() {
-  const { items, nextPageToken, prevPageToken, pageInfo: { totalResults, resultsPerPage } } = useLoaderData();
+  const {
+    items: playlist,
+    nextPageToken,
+    prevPageToken,
+    pageInfo: { totalResults, resultsPerPage }
+  } = useLoaderData();
   const [page, setPage] = useState(1);
+  const [videoId, setVideoId] = useState(
+    playlist[0].snippet.resourceId.videoId
+  );
+
+  useEffect(function () {
+    setVideoId(playlist[0].snippet.resourceId.videoId);
+  }, [playlist]);
 
   return (
     <div>
-      <h1>Playlist</h1>
-      {items.length ? (
-        <ol>
-          {items.map(function (playlistItem) {
-            const { snippet } = playlistItem;
-            return (
-              <li key={playlistItem.id}>{snippet.title}</li>
-            );
-          })}
-        </ol>
-      ) : (
-        <p>
-          <i>No playlist items</i>
-        </p>
-      )}
-      <Form>
-        <div style={{ padding: 5 }}>
+      <div style={{ float: "left", width: "25%", borderRight: "1px solid #555", padding: 10 }}>
+        <h4 style={{ margin: 0, }}>
+          Playlist ( page {page} of {Math.ceil(totalResults / resultsPerPage)} )
+        </h4>
+        {playlist.length ? (
+          <ol style={{ margin: 0, padding: 16 }}>
+            {playlist.map(function (item) {
+              const { snippet: { title, resourceId: { videoId } } } = item;
+              return (
+                <li
+                  key={item.id}
+                  style={{ fontSize: 14 }}
+                  onClick={function () {
+                    setVideoId(videoId);
+                  }}
+                >
+                  {title.slice(0, 25)}...
+                </li>
+              );
+            })}
+          </ol>
+        ) : (
+          <p>
+            <i>No playlist items</i>
+          </p>
+        )}
+        <Form id="pagination-form">
           <button
             type="submit"
-            style={{ marginRight: 5 }}
-            name="prevPageToken"
+            style={{ marginRight: 10 }}
+            name="prev"
             value={prevPageToken}
             disabled={!prevPageToken}
             onClick={function () {
@@ -75,7 +95,7 @@ export function Index() {
           </button>
           <button
             type="submit"
-            name="nextPageToken"
+            name="next"
             value={nextPageToken}
             disabled={!nextPageToken}
             onClick={function () {
@@ -88,9 +108,19 @@ export function Index() {
           >
             Next
           </button>
-        </div>
-      </Form>
-      <div>page {page} of {Math.ceil(totalResults / resultsPerPage)}</div>
+        </Form>
+      </div>
+
+      <div style={{ float: "left", width: "50%", borderRight: "1px solid #555", padding: 10 }}>
+        <h4 style={{ margin: 0 }}>Video</h4>
+        {videoId}
+      </div>
+
+      <div style={{ float: "left", width: "25%", padding: 10 }}>
+        <h4 style={{ margin: 0, }}>
+          Notes
+        </h4>
+      </div>
     </div>
   );
 }
