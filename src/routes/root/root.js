@@ -1,12 +1,40 @@
-import { Form, NavLink, Outlet, useLoaderData } from "react-router-dom";
+import { useEffect } from "react";
+import {
+  Form,
+  NavLink,
+  Outlet,
+  useLoaderData,
+  useNavigation,
+  useSubmit
+} from "react-router-dom";
 
-export async function loader() {
-  const response = await fetch("https://takenotes-api.herokuapp.com/playlists");
-  return await response.json();
+export async function loader({ request }) {
+  const url = new URL(request.url);
+  const playlist = url.searchParams.get("playlist");
+
+  let response;
+
+  if (playlist) {
+    response = await fetch(`https://takenotes-api.herokuapp.com/playlists?playlist=${playlist}`);
+  } else {
+    response = await fetch("https://takenotes-api.herokuapp.com/playlists");
+  }
+
+  const playlists = await response.json();
+  return { playlists, playlist }
 }
 
 export function Root() {
-  const playlists = useLoaderData();
+  const { playlists, playlist } = useLoaderData();
+  const navigation = useNavigation();
+  const submit = useSubmit();
+
+  const searching = navigation.location &&
+    new URLSearchParams(navigation.location.search).has("playlist");
+
+  useEffect(function () {
+    document.getElementById("playlist").value = playlist;
+  }, [playlist]);
 
   return (
     <>
@@ -36,17 +64,43 @@ export function Root() {
               type="search"
               name="playlist"
               style={{ width: "100%" }}
+              defaultValue={playlist}
+              className={searching ? "loading" : ""}
+              onChange={function (event) {
+                const isFirstSearch = playlist == null;
+                submit(event.currentTarget.form, {
+                  replace: !isFirstSearch,
+                });
+              }}
+            />
+            <div
+              id="search-spinner"
+              aria-hidden
+              hidden={!searching}
+            />
+            <div
+              className="sr-only"
+              aria-live="polite"
             />
           </Form>
         </div>
 
-        <nav style={{ marginTop: 10 }}>
+        <nav id="sidebar" style={{ marginTop: 10 }}>
           {playlists.length ? (
             <ul style={{ listStyle: "none", margin: 0, padding: 0 }}>
               {playlists.map(function (playlist) {
                 return (
                   <li key={playlist.playlistId} style={{ fontSize: 14 }}>
-                    <NavLink to={`${playlist.playlistId}`}>
+                    <NavLink
+                      to={`${playlist.playlistId}`}
+                      className={function ({ isActive, isPending }) {
+                        return isActive
+                          ? "active"
+                          : isPending
+                            ? "pending"
+                            : ""
+                      }}
+                    >
                       {playlist.title}{" "}
                       {playlist.favorite && <span>★</span>}
                     </NavLink>
@@ -68,6 +122,9 @@ export function Root() {
           float: "left",
           width: "calc(100% - 200px)",
         }}
+        className={
+          navigation.state === "loading" ? "loading" : ""
+        }
       >
         <Outlet />
       </div>

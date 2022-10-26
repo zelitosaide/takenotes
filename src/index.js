@@ -9,6 +9,7 @@ import {
   Root,
   loader as rootLoader
 } from "./routes/root/root";
+import { Index } from "./routes/playlists";
 import {
   PlayList,
   loader as playlistLoader
@@ -24,9 +25,10 @@ import {
   action as playlistSettingsAction
 } from "./routes/playlists/settings";
 import {
-  Index as PlayListIndex,
-  loader as playlistIndexLoader
-} from "./routes/playlists";
+  Overview,
+  loader as playlistOverviewLoader
+} from "./routes/playlists/overview";
+import { action as deletePlaylist } from "./routes/playlists/delete";
 
 // Users
 // import { Root as UserRoot, loader as rootUserLoader } from "./routes/users/root";
@@ -88,21 +90,35 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />,
     children: [
       {
+        index: true,
+        element: <Index />
+      },
+      {
         path: ":playlistId",
         loader: playlistLoader,
         element: <PlayList />,
         children: [
           {
-            index: true,
-            loader: playlistIndexLoader,
-            element: <PlayListIndex />
+            errorElement: <ErrorPage />,
+            children: [
+              {
+                index: true,
+                loader: playlistOverviewLoader,
+                element: <Overview />
+              },
+              {
+                path: "settings",
+                action: playlistSettingsAction,
+                loader: playlistSettingsLoader,
+                element: <PlaylistSettings />,
+              },
+              {
+                path: "settings/delete",
+                action: deletePlaylist,
+                errorElement: <div style={{ padding: 10 }}>Oops! There was an error.</div>
+              }
+            ]
           },
-          {
-            path: "settings",
-            action: playlistSettingsAction,
-            loader: playlistSettingsLoader,
-            element: <PlaylistSettings />
-          }
         ]
       },
       {

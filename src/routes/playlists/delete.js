@@ -1,9 +1,9 @@
 import { redirect } from "react-router-dom";
 
-import { API } from "../../api/client";
-
 export async function action({ params }) {
-  const { playlistId } = params;
-  await API.delete(`/videoPlayLists/${playlistId}`);
+  const playlistId = params.playlistId;
+  await fetch(`https://takenotes-api.herokuapp.com/playlists/${playlistId}`, {
+    method: "DELETE"
+  });
   return redirect("/");
 }
