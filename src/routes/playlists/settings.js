@@ -53,7 +53,7 @@ export function PlaylistSettings() {
             }
           }}
         >
-          <button type="submit">Delete</button>
+          <button disabled type="submit">Delete</button>
         </Form>
         {" "}
         <fetcher.Form

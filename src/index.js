@@ -4,7 +4,6 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import "./index.css";
 
-// Takenotes
 import {
   Root,
   loader as rootLoader
