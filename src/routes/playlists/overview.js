@@ -14,19 +14,19 @@ export async function loader({ params, request }) {
 
   if (!next && !prev) {
     response = await fetch(
-      `${BASE_URL}?part=snippet&key=${API_KEY}&playlistId=${playlistId}&maxResults=20`
+      `${BASE_URL}/playlistItems?part=snippet&key=${API_KEY}&playlistId=${playlistId}&maxResults=20`
     );
   }
 
   if (next) {
     response = await fetch(
-      `${BASE_URL}?part=snippet&key=${API_KEY}&playlistId=${playlistId}&maxResults=20&pageToken=${next}`
+      `${BASE_URL}/playlistItems?part=snippet&key=${API_KEY}&playlistId=${playlistId}&maxResults=20&pageToken=${next}`
     );
   }
 
   if (prev) {
     response = await fetch(
-      `${BASE_URL}?part=snippet&key=${API_KEY}&playlistId=${playlistId}&maxResults=20&pageToken=${prev}`
+      `${BASE_URL}/playlistItems?part=snippet&key=${API_KEY}&playlistId=${playlistId}&maxResults=20&pageToken=${prev}`
     );
   }
 
@@ -56,6 +56,7 @@ export function Overview() {
   useEffect(function () {
     setVideoId(playlist[0].snippet.resourceId.videoId);
   }, [playlist]);
+
 
   return (
     <div>

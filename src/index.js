@@ -16,7 +16,8 @@ import {
 import { ErrorPage } from "./error-page";
 import {
   CreatePlaylist,
-  action as createPlaylistAction
+  action as createPlaylistAction,
+  loader as createPlaylistLoader
 } from "./routes/playlists/create";
 import {
   PlaylistSettings,
@@ -123,6 +124,7 @@ const router = createBrowserRouter([
       {
         path: "create",
         action: createPlaylistAction,
+        loader: createPlaylistLoader,
         element: <CreatePlaylist />
       }
     ]
