@@ -42,7 +42,7 @@ export function Root() {
         id="root"
         style={{
           float: "left",
-          width: 200,
+          width: 250,
           padding: 10,
           borderRight: "1px solid #555",
         }}
@@ -53,7 +53,15 @@ export function Root() {
               type="submit"
               style={{ width: "100%", marginBottom: 10 }}
             >
-              Create Playlist
+              Create New Playlist
+            </button>
+          </Form>
+          <Form action="import">
+            <button
+              type="submit"
+              style={{ width: "100%", marginBottom: 10 }}
+            >
+              Import Playlist From YouTube
             </button>
           </Form>
           <Form id="search-playlist-form" role="search">
@@ -120,7 +128,7 @@ export function Root() {
         id="playlist-outlet"
         style={{
           float: "left",
-          width: "calc(100% - 200px)",
+          width: "calc(100% - 250px)",
         }}
         className={
           navigation.state === "loading" ? "loading" : ""

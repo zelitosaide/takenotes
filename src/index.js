@@ -14,11 +14,7 @@ import {
   loader as playlistLoader
 } from "./routes/playlists/playlist";
 import { ErrorPage } from "./error-page";
-import {
-  CreatePlaylist,
-  action as createPlaylistAction,
-  loader as createPlaylistLoader
-} from "./routes/playlists/create";
+import { CreatePlaylist, } from "./routes/playlists/create";
 import {
   PlaylistSettings,
   loader as playlistSettingsLoader,
@@ -29,6 +25,11 @@ import {
   loader as playlistOverviewLoader
 } from "./routes/playlists/overview";
 import { action as deletePlaylist } from "./routes/playlists/delete";
+import {
+  ImportPlaylist,
+  action as importPlaylistAction,
+  loader as importPlaylistLoader
+} from "./routes/playlists/import";
 
 // Users
 // import { Root as UserRoot, loader as rootUserLoader } from "./routes/users/root";
@@ -123,9 +124,15 @@ const router = createBrowserRouter([
       },
       {
         path: "create",
-        action: createPlaylistAction,
-        loader: createPlaylistLoader,
+        // action: createPlaylistAction,
+        // loader: createPlaylistLoader,
         element: <CreatePlaylist />
+      },
+      {
+        path: "import",
+        action: importPlaylistAction,
+        loader: importPlaylistLoader,
+        element: <ImportPlaylist />
       }
     ]
   }
