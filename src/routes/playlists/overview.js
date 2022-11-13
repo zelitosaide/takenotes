@@ -144,7 +144,6 @@ export function Overview() {
         }}
       >
         <h4 style={{ margin: 0 }}>Video</h4>
-
         <iframe
           width="560"
           height="315"
