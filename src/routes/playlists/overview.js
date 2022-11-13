@@ -46,28 +46,42 @@ export function Overview() {
     items: playlist,
     nextPageToken,
     prevPageToken,
-    pageInfo: { totalResults, resultsPerPage }
+    pageInfo: { totalResults, resultsPerPage },
   } = useLoaderData();
   const [page, setPage] = useState(1);
   const [videoId, setVideoId] = useState(
     playlist[0].snippet.resourceId.videoId
   );
 
-  useEffect(function () {
-    setVideoId(playlist[0].snippet.resourceId.videoId);
-  }, [playlist]);
-
+  useEffect(
+    function () {
+      setVideoId(playlist[0].snippet.resourceId.videoId);
+    },
+    [playlist]
+  );
 
   return (
     <div>
-      <div style={{ float: "left", width: "25%", borderRight: "1px solid #555", padding: 10 }}>
-        <h4 style={{ margin: 0, }}>
+      <div
+        style={{
+          float: "left",
+          width: "25%",
+          borderRight: "1px solid #555",
+          padding: 10,
+        }}
+      >
+        <h4 style={{ margin: 0 }}>
           Playlist ( page {page} of {Math.ceil(totalResults / resultsPerPage)} )
         </h4>
         {playlist.length ? (
           <ol style={{ margin: 0, padding: 16 }}>
             {playlist.map(function (item) {
-              const { snippet: { title, resourceId: { videoId } } } = item;
+              const {
+                snippet: {
+                  title,
+                  resourceId: { videoId },
+                },
+              } = item;
               return (
                 <li
                   key={item.id}
@@ -121,15 +135,31 @@ export function Overview() {
         </Form>
       </div>
 
-      <div style={{ float: "left", width: "50%", borderRight: "1px solid #555", padding: 10 }}>
+      <div
+        style={{
+          float: "left",
+          width: "50%",
+          borderRight: "1px solid #555",
+          padding: 10,
+        }}
+      >
         <h4 style={{ margin: 0 }}>Video</h4>
-        {videoId}
+
+        <iframe
+          width="560"
+          height="315"
+          src={`https://www.youtube.com/embed/${videoId}`}
+          title="YouTube video player"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen
+        >
+          {videoId}
+        </iframe>
       </div>
 
       <div style={{ float: "left", width: "25%", padding: 10 }}>
-        <h4 style={{ margin: 0, }}>
-          Notes
-        </h4>
+        <h4 style={{ margin: 0 }}>Notes</h4>
       </div>
     </div>
   );
