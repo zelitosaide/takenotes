@@ -52,10 +52,12 @@ export function Overview() {
   const [videoId, setVideoId] = useState(
     playlist[0].snippet.resourceId.videoId
   );
+  const [videoTitle, setVideoTitle] = useState(playlist[0].snippet.title);
 
   useEffect(
     function () {
       setVideoId(playlist[0].snippet.resourceId.videoId);
+      setVideoTitle(playlist[0].snippet.title);
     },
     [playlist]
   );
@@ -88,6 +90,7 @@ export function Overview() {
                   style={{ fontSize: 14 }}
                   onClick={function () {
                     setVideoId(videoId);
+                    setVideoTitle(title);
                   }}
                 >
                   {title.slice(0, 25)}...
@@ -143,7 +146,7 @@ export function Overview() {
           padding: 10,
         }}
       >
-        <h4 style={{ margin: 0 }}>Video</h4>
+        <h4 style={{ margin: 0 }}>Video: {videoTitle}</h4>
         <iframe
           width="560"
           height="315"
