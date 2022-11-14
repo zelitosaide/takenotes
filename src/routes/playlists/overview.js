@@ -158,14 +158,18 @@ export function Overview() {
             width="560"
             height="315"
             // src={`https://www.youtube.com/embed/${videoId}`}
-            src={`https://www.youtube.com/embed/${playlist[videoIndex].snippet.resourceId.videoId}`}
+            src={`https://www.youtube.com/embed/${
+              playlist[videoIndex]
+                ? playlist[videoIndex].snippet.resourceId.videoId
+                : videoId
+            }`}
             title="YouTube video player"
             frameBorder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen
           >
             {/* {videoId} */}
-            {playlist[videoIndex].snippet.resourceId.videoId}
+            {/* {playlist[videoIndex].snippet.resourceId.videoId} */}
           </iframe>
 
           <div id="video-controls">
