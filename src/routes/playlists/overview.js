@@ -53,6 +53,9 @@ export function Overview() {
     playlist[0].snippet.resourceId.videoId
   );
   const [videoTitle, setVideoTitle] = useState(playlist[0].snippet.title);
+  const [videoIndex, setVideoIndex] = useState(0);
+
+  console.log(videoIndex);
 
   useEffect(
     function () {
@@ -77,7 +80,7 @@ export function Overview() {
         </h4>
         {playlist.length ? (
           <ol style={{ margin: 0, padding: 16 }}>
-            {playlist.map(function (item) {
+            {playlist.map(function (item, index) {
               const {
                 snippet: {
                   title,
@@ -95,6 +98,7 @@ export function Overview() {
                   onClick={function () {
                     setVideoId(videoId);
                     setVideoTitle(title);
+                    setVideoIndex(index);
                   }}
                 >
                   {title.slice(0, 25)}...
@@ -154,18 +158,35 @@ export function Overview() {
         <iframe
           width="560"
           height="315"
-          src={`https://www.youtube.com/embed/${videoId}`}
+          // src={`https://www.youtube.com/embed/${videoId}`}
+          src={`https://www.youtube.com/embed/${playlist[videoIndex].snippet.resourceId.videoId}`}
           title="YouTube video player"
           frameBorder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowFullScreen
         >
-          {videoId}
+          {/* {videoId} */}
+          {playlist[videoIndex].snippet.resourceId.videoId}
         </iframe>
 
         <div id="video-controls">
-          <button style={{ marginRight: 10 }}>Previous Video</button>
-          <button>Next Video</button>
+          <button
+            style={{ marginRight: 10 }}
+            onClick={function () {
+              setVideoTitle(playlist[videoIndex - 1].snippet.title);
+              setVideoIndex(videoIndex - 1);
+            }}
+          >
+            Previous Video
+          </button>
+          <button
+            onClick={function () {
+              setVideoTitle(playlist[videoIndex + 1].snippet.title);
+              setVideoIndex(videoIndex + 1);
+            }}
+          >
+            Next Video
+          </button>
         </div>
       </div>
 
