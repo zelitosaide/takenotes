@@ -156,14 +156,17 @@ export function Overview() {
           height="315"
           src={`https://www.youtube.com/embed/${videoId}`}
           title="YouTube video player"
-          frameborder="0"
+          frameBorder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowfullscreen
+          allowFullScreen
         >
           {videoId}
         </iframe>
 
-        <div id="video-controls"></div>
+        <div id="video-controls">
+          <button style={{ marginRight: 10 }}>Previous Video</button>
+          <button>Next Video</button>
+        </div>
       </div>
 
       <div style={{ float: "left", width: "25%", padding: 10 }}>
