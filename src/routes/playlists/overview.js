@@ -87,7 +87,11 @@ export function Overview() {
               return (
                 <li
                   key={item.id}
-                  style={{ fontSize: 14 }}
+                  style={{
+                    fontSize: 14,
+                    color: title === videoTitle ? "red" : null,
+                    cursor: "pointer",
+                  }}
                   onClick={function () {
                     setVideoId(videoId);
                     setVideoTitle(title);
@@ -158,6 +162,8 @@ export function Overview() {
         >
           {videoId}
         </iframe>
+
+        <div id="video-controls"></div>
       </div>
 
       <div style={{ float: "left", width: "25%", padding: 10 }}>
