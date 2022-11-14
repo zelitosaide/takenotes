@@ -55,12 +55,11 @@ export function Overview() {
   const [videoTitle, setVideoTitle] = useState(playlist[0].snippet.title);
   const [videoIndex, setVideoIndex] = useState(0);
 
-  console.log(videoIndex);
-
   useEffect(
     function () {
       setVideoId(playlist[0].snippet.resourceId.videoId);
       setVideoTitle(playlist[0].snippet.title);
+      setVideoIndex(0);
     },
     [playlist]
   );
@@ -145,51 +144,55 @@ export function Overview() {
           </button>
         </Form>
       </div>
-
-      <div
-        style={{
-          float: "left",
-          width: "50%",
-          borderRight: "1px solid #555",
-          padding: 10,
-        }}
-      >
-        <h4 style={{ margin: 0 }}>Video: {videoTitle}</h4>
-        <iframe
-          width="560"
-          height="315"
-          // src={`https://www.youtube.com/embed/${videoId}`}
-          src={`https://www.youtube.com/embed/${playlist[videoIndex].snippet.resourceId.videoId}`}
-          title="YouTube video player"
-          frameBorder="0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowFullScreen
+      {playlist.length ? (
+        <div
+          style={{
+            float: "left",
+            width: "50%",
+            borderRight: "1px solid #555",
+            padding: 10,
+          }}
         >
-          {/* {videoId} */}
-          {playlist[videoIndex].snippet.resourceId.videoId}
-        </iframe>
+          <h4 style={{ margin: 0 }}>Video: {videoTitle}</h4>
+          <iframe
+            width="560"
+            height="315"
+            // src={`https://www.youtube.com/embed/${videoId}`}
+            src={`https://www.youtube.com/embed/${playlist[videoIndex].snippet.resourceId.videoId}`}
+            title="YouTube video player"
+            frameBorder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+          >
+            {/* {videoId} */}
+            {playlist[videoIndex].snippet.resourceId.videoId}
+          </iframe>
 
-        <div id="video-controls">
-          <button
-            style={{ marginRight: 10 }}
-            onClick={function () {
-              setVideoTitle(playlist[videoIndex - 1].snippet.title);
-              setVideoIndex(videoIndex - 1);
-            }}
-          >
-            Previous Video
-          </button>
-          <button
-            onClick={function () {
-              setVideoTitle(playlist[videoIndex + 1].snippet.title);
-              setVideoIndex(videoIndex + 1);
-            }}
-          >
-            Next Video
-          </button>
+          <div id="video-controls">
+            <button
+              style={{ marginRight: 10 }}
+              onClick={function () {
+                if (videoIndex > 0) {
+                  setVideoTitle(playlist[videoIndex - 1].snippet.title);
+                  setVideoIndex(videoIndex - 1);
+                }
+              }}
+            >
+              Previous Video
+            </button>
+            <button
+              onClick={function () {
+                if (videoIndex < playlist.length - 1) {
+                  setVideoTitle(playlist[videoIndex + 1].snippet.title);
+                  setVideoIndex(videoIndex + 1);
+                }
+              }}
+            >
+              Next Video
+            </button>
+          </div>
         </div>
-      </div>
-
+      ) : null}
       <div style={{ float: "left", width: "25%", padding: 10 }}>
         <h4 style={{ margin: 0 }}>Notes</h4>
       </div>
