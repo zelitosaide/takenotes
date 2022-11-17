@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Form, useLoaderData } from "react-router-dom";
+import YouTube from "react-youtube";
 
 const BASE_URL = process.env.REACT_APP_YOUTUBE_BASE_URL;
 const API_KEY = process.env.REACT_APP_YOUTUBE_API_KEY;
@@ -154,7 +155,7 @@ export function Overview() {
           }}
         >
           <h4 style={{ margin: 0 }}>Video: {videoTitle}</h4>
-          <iframe
+          {/* <iframe
             width="560"
             height="315"
             // src={`https://www.youtube.com/embed/${videoId}`}
@@ -167,10 +168,44 @@ export function Overview() {
             frameBorder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen
-          >
-            {/* {videoId} */}
-            {/* {playlist[videoIndex].snippet.resourceId.videoId} */}
-          </iframe>
+          ></iframe> */}
+
+          <YouTube
+            videoId={
+              playlist[videoIndex]
+                ? playlist[videoIndex].snippet.resourceId.videoId
+                : videoId
+            } // defaults -> ''
+            id="" // defaults -> ''
+            className="" // defaults -> ''
+            iframeClassName="" // defaults -> ''
+            style={{}} // defaults -> {}
+            title="" // defaults -> ''
+            loading={undefined} // defaults -> undefined
+            opts={{
+              height: "315",
+              width: "560",
+              playerVars: {
+                // https://developers.google.com/youtube/player_parameters
+                autoplay: 1,
+              },
+            }} // defaults -> {}
+            onReady={function (event) {
+              event.target.pauseVideo();
+            }} // defaults -> noop
+            onPlay={function () {}} // defaults -> noop
+            onPause={function () {}} // defaults -> noop
+            onEnd={function (event) {
+              if (videoIndex < playlist.length - 1) {
+                setVideoTitle(playlist[videoIndex + 1].snippet.title);
+                setVideoIndex(videoIndex + 1);
+              }
+            }} // defaults -> noop
+            onError={function () {}} // defaults -> noop
+            onStateChange={function () {}} // defaults -> noop
+            onPlaybackRateChange={function () {}} // defaults -> noop
+            onPlaybackQualityChange={function () {}} // defaults -> noop
+          />
 
           <div id="video-controls">
             <button
