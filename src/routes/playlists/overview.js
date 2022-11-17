@@ -56,6 +56,7 @@ export function Overview() {
   const [videoTitle, setVideoTitle] = useState(playlist[0].snippet.title);
   const [videoIndex, setVideoIndex] = useState(0);
   const [replay, setReplay] = useState(false);
+  const [replayPlaylist, setReplayPlaylist] = useState(false);
 
   useEffect(
     function () {
@@ -78,6 +79,16 @@ export function Overview() {
       >
         <h4 style={{ margin: 0 }}>
           Playlist ( page {page} of {Math.ceil(totalResults / resultsPerPage)} )
+          <br />
+          <label htmlFor="auto-replay-playlist">Auto Replay</label>
+          <input
+            id="auto-replay-playlist"
+            type="checkbox"
+            value={replayPlaylist}
+            onChange={function (event) {
+              setReplayPlaylist(event.target.checked);
+            }}
+          />
         </h4>
         {playlist.length ? (
           <ol style={{ margin: 0, padding: 16 }}>
@@ -206,6 +217,11 @@ export function Overview() {
               } else if (videoIndex < playlist.length - 1) {
                 setVideoTitle(playlist[videoIndex + 1].snippet.title);
                 setVideoIndex(videoIndex + 1);
+              }
+
+              if (replayPlaylist && videoIndex === playlist.length - 1) {
+                setVideoTitle(playlist[0].snippet.title);
+                setVideoIndex(0);
               }
             }} // defaults -> noop
             onError={function () {}} // defaults -> noop
