@@ -55,6 +55,7 @@ export function Overview() {
   );
   const [videoTitle, setVideoTitle] = useState(playlist[0].snippet.title);
   const [videoIndex, setVideoIndex] = useState(0);
+  const [replay, setReplay] = useState(false);
 
   useEffect(
     function () {
@@ -196,7 +197,13 @@ export function Overview() {
             onPlay={function () {}} // defaults -> noop
             onPause={function () {}} // defaults -> noop
             onEnd={function (event) {
-              if (videoIndex < playlist.length - 1) {
+              // if (videoIndex < playlist.length - 1) {
+              //   setVideoTitle(playlist[videoIndex + 1].snippet.title);
+              //   setVideoIndex(videoIndex + 1);
+              // }
+              if (replay) {
+                event.target.playVideo();
+              } else if (videoIndex < playlist.length - 1) {
                 setVideoTitle(playlist[videoIndex + 1].snippet.title);
                 setVideoIndex(videoIndex + 1);
               }
@@ -220,6 +227,7 @@ export function Overview() {
               Previous Video
             </button>
             <button
+              style={{ marginRight: 10 }}
               onClick={function () {
                 if (videoIndex < playlist.length - 1) {
                   setVideoTitle(playlist[videoIndex + 1].snippet.title);
@@ -229,6 +237,15 @@ export function Overview() {
             >
               Next Video
             </button>
+            <label htmlFor="auto-replay">Auto Replay</label>
+            <input
+              id="auto-replay"
+              type="checkbox"
+              value={replay}
+              onChange={function (event) {
+                setReplay(event.target.checked);
+              }}
+            />
           </div>
         </div>
       ) : null}
