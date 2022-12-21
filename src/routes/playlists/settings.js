@@ -1,13 +1,10 @@
-import {
-  Form,
-  useLoaderData,
-  useNavigate,
-  useFetcher
-} from "react-router-dom";
+import { Form, useLoaderData, useNavigate, useFetcher } from "react-router-dom";
+
+import { baseUrl } from "../../api/client";
 
 export async function loader({ params }) {
   const playlistId = params.playlistId;
-  const response = await fetch(`https://takenotes-api.herokuapp.com/playlists/${playlistId}`);
+  const response = await fetch(`${baseUrl}/playlists/${playlistId}`);
   return await response.json();
 }
 
@@ -16,7 +13,7 @@ export async function action({ request, params }) {
   const formData = await request.formData();
   const updates = Object.fromEntries(formData);
 
-  return await fetch(`https://takenotes-api.herokuapp.com/playlists/${playlistId}`, {
+  return await fetch(`${baseUrl}/playlists/${playlistId}`, {
     method: "PATCH",
     body: JSON.stringify({
       ...updates,
@@ -24,7 +21,7 @@ export async function action({ request, params }) {
     }),
     headers: {
       "Content-type": "application/json; charset=UTF-8",
-    }
+    },
   });
 }
 
@@ -48,14 +45,20 @@ export function PlaylistSettings() {
           action="delete"
           style={{ display: "inline-block" }}
           onSubmit={function (event) {
-            if (!window.confirm("Please confirm you want to delete this record.")) {
+            if (
+              !window.confirm("Please confirm you want to delete this record.")
+            ) {
               event.preventDefault();
             }
           }}
         >
-          <button disabled type="submit">Delete</button>
-        </Form>
-        {" "}
+          <button
+            disabled
+            type="submit"
+          >
+            Delete
+          </button>
+        </Form>{" "}
         <fetcher.Form
           method="post"
           style={{ display: "inline-block" }}
@@ -63,17 +66,16 @@ export function PlaylistSettings() {
           <button
             name="favorite"
             value={favorite ? "false" : "true"}
-            aria-label={
-              favorite
-                ? "Remove from favorites"
-                : "Add to favorites"
-            }
+            aria-label={favorite ? "Remove from favorites" : "Add to favorites"}
           >
             {favorite ? "★" : "☆"}
           </button>
         </fetcher.Form>
       </h4>
-      <fetcher.Form method="post" id="playlist-settings-form">
+      <fetcher.Form
+        method="post"
+        id="playlist-settings-form"
+      >
         <p>
           <label
             htmlFor="playlist-title"
@@ -116,7 +118,9 @@ export function PlaylistSettings() {
           </button>
           <button
             type="button"
-            onClick={function () { navigate(-1); }}
+            onClick={function () {
+              navigate(-1);
+            }}
           >
             Cancel
           </button>

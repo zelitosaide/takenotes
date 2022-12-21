@@ -5,8 +5,10 @@ import {
   Outlet,
   useLoaderData,
   useNavigation,
-  useSubmit
+  useSubmit,
 } from "react-router-dom";
+
+import { baseUrl } from "../../api/client";
 
 export async function loader({ request }) {
   const url = new URL(request.url);
@@ -15,13 +17,13 @@ export async function loader({ request }) {
   let response;
 
   if (playlist) {
-    response = await fetch(`https://takenotes-api.herokuapp.com/playlists?playlist=${playlist}`);
+    response = await fetch(`${baseUrl}/playlists?playlist=${playlist}`);
   } else {
-    response = await fetch("https://takenotes-api.herokuapp.com/playlists");
+    response = await fetch(baseUrl + "/playlists");
   }
 
   const playlists = await response.json();
-  return { playlists, playlist }
+  return { playlists, playlist };
 }
 
 export function Root() {
@@ -29,12 +31,16 @@ export function Root() {
   const navigation = useNavigation();
   const submit = useSubmit();
 
-  const searching = navigation.location &&
+  const searching =
+    navigation.location &&
     new URLSearchParams(navigation.location.search).has("playlist");
 
-  useEffect(function () {
-    document.getElementById("playlist").value = playlist;
-  }, [playlist]);
+  useEffect(
+    function () {
+      document.getElementById("playlist").value = playlist;
+    },
+    [playlist]
+  );
 
   return (
     <>
@@ -64,7 +70,10 @@ export function Root() {
               Import Playlist From YouTube
             </button>
           </Form>
-          <Form id="search-playlist-form" role="search">
+          <Form
+            id="search-playlist-form"
+            role="search"
+          >
             <input
               id="playlist"
               aria-label="Search Playlist"
@@ -93,24 +102,25 @@ export function Root() {
           </Form>
         </div>
 
-        <nav id="sidebar" style={{ marginTop: 10 }}>
+        <nav
+          id="sidebar"
+          style={{ marginTop: 10 }}
+        >
           {playlists.length ? (
             <ul style={{ listStyle: "none", margin: 0, padding: 0 }}>
               {playlists.map(function (playlist) {
                 return (
-                  <li key={playlist.playlistId} style={{ fontSize: 14 }}>
+                  <li
+                    key={playlist.playlistId}
+                    style={{ fontSize: 14 }}
+                  >
                     <NavLink
                       to={`${playlist.playlistId}`}
                       className={function ({ isActive, isPending }) {
-                        return isActive
-                          ? "active"
-                          : isPending
-                            ? "pending"
-                            : ""
+                        return isActive ? "active" : isPending ? "pending" : "";
                       }}
                     >
-                      {playlist.title}{" "}
-                      {playlist.favorite && <span>★</span>}
+                      {playlist.title} {playlist.favorite && <span>★</span>}
                     </NavLink>
                   </li>
                 );
@@ -130,9 +140,7 @@ export function Root() {
           float: "left",
           width: "calc(100% - 250px)",
         }}
-        className={
-          navigation.state === "loading" ? "loading" : ""
-        }
+        className={navigation.state === "loading" ? "loading" : ""}
       >
         <Outlet />
       </div>

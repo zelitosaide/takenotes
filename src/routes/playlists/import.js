@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { Form, redirect, useLoaderData, useNavigate } from "react-router-dom";
 
+import { baseUrl } from "../../api/client";
+
 const BASE_URL = process.env.REACT_APP_YOUTUBE_BASE_URL;
 const CHANNEL_ID = process.env.REACT_APP_YOUTUBE_CHANNEL_ID;
 const API_KEY = process.env.REACT_APP_YOUTUBE_API_KEY;
@@ -8,12 +10,12 @@ const API_KEY = process.env.REACT_APP_YOUTUBE_API_KEY;
 export async function action({ request }) {
   const formData = await request.formData();
   const playlist = Object.fromEntries(formData);
-  const response = await fetch("https://takenotes-api.herokuapp.com/playlists", {
+  const response = await fetch(baseUrl + "/playlists", {
     method: "POST",
     body: JSON.stringify(playlist),
     headers: {
-      "Content-type": "application/json; charset=UTF-8"
-    }
+      "Content-type": "application/json; charset=UTF-8",
+    },
   });
   const { playlistId } = await response.json();
   return redirect(`/${playlistId}`);
@@ -40,12 +42,16 @@ export function ImportPlaylist() {
         style={{
           margin: 0,
           borderBottom: "1px solid #555",
-          padding: 10
+          padding: 10,
         }}
       >
         Import Playlist
       </h4>
-      <Form style={{ padding: 10, paddingTop: 0 }} method="post" id="playlist-form">
+      <Form
+        style={{ padding: 10, paddingTop: 0 }}
+        method="post"
+        id="playlist-form"
+      >
         {playlists.length && (
           <p>
             <label
@@ -61,7 +67,7 @@ export function ImportPlaylist() {
                   <option
                     key={playlist.id}
                     onClick={function () {
-                      setPlaylist(playlist)
+                      setPlaylist(playlist);
                     }}
                   >
                     {playlist.title}
